@@ -56,9 +56,17 @@ write ##class(dc.hfloader.Loader).Info("hitorilabs/iris")
 
 数据集采用非流式下载，行数限制在下载后才应用；插入逐行执行。`replace` 在导入事务内删除现有表；建表、替换或追加失败时会回滚。已有调用者事务时导入会被拒绝，避免提交或回滚调用者的工作。`append` 假定现有表结构兼容。替换重要表之前请先备份。
 
-## 本地 ZPM 安装
+## ZPM 安装
 
-在已安装 Embedded Python 和 [InterSystems Package Manager](https://github.com/intersystems/ipm) 的 IRIS 实例中，先为运行 IRIS 的操作系统账号安装 `datasets` 和 `pyarrow`，然后在目标 namespace 中加载本地目录：
+在已安装 Embedded Python 和 [InterSystems Package Manager（ZPM）](https://github.com/intersystems/ipm) 的 IRIS 实例中，如有需要请先启用社区包仓库，然后在目标 namespace 中执行：
+
+```objectscript
+zpm "install iris-hf-import"
+```
+
+公共包安装已在 IRIS Community 2026.3 ARM64、Python 3.12 和 ZPM 0.10.10 环境中验证；安装过程中会安装 `requirements.txt` 中的 Python 依赖，需要访问包仓库和 PyPI。
+
+也可以先为运行 IRIS 的操作系统账号安装 `datasets` 和 `pyarrow`，再加载本地目录：
 
 ```objectscript
 zpm "load /path/to/iris-hf-import"

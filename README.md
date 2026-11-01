@@ -56,15 +56,21 @@ Scalar integer, floating-point, boolean, string, date and timestamp features are
 
 The dataset is downloaded without streaming, and the row limit is applied afterward. Inserts are executed row by row. `replace` drops an existing target inside the import transaction; failed creates, replacements and appends are rolled back. Imports reject calls made inside an existing transaction, so they do not commit or roll back a caller’s work. `append` assumes a compatible existing schema. Back up important data before replacing a table.
 
-## Local ZPM installation
+## ZPM installation
 
-On an IRIS instance with Embedded Python and [InterSystems Package Manager](https://github.com/intersystems/ipm) installed, install `datasets` and `pyarrow` for the OS account running IRIS. Then load the local checkout in the target namespace:
+On an IRIS instance with Embedded Python and [InterSystems Package Manager (ZPM)](https://github.com/intersystems/ipm) installed, enable the Community Package Registry if needed. In the target namespace, run:
+
+```objectscript
+zpm "install iris-hf-import"
+```
+
+The public package installation was tested with ZPM 0.10.10 on IRIS Community 2026.3 ARM64 with Python 3.12; it installed the Python dependencies from `requirements.txt` during installation. Network access to the package registry and PyPI is required.
+
+To load a local checkout instead, install `datasets` and `pyarrow` for the OS account running IRIS, then run:
 
 ```objectscript
 zpm "load /path/to/iris-hf-import"
 ```
-
-The package copies the Python module into IRIS's library Python directory. A public registry package has not been published. Local ZPM installation was tested on IRIS Community 2026.3 ARM64 with Python 3.12. SQL functions, REST endpoints and a web UI are not implemented.
 
 ## Tests
 
