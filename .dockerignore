@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+__pycache__
+*.py[cod]
+*.log
+.DS_Store
+PLAN.md
+docs/superpowers/
+worklog/
