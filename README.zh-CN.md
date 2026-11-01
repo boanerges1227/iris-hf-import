@@ -4,18 +4,24 @@
 
 通过一行 ObjectScript 调用，将 Hugging Face 数据集的一个 split 导入 InterSystems IRIS SQL 表。项目使用 Embedded Python 和 Hugging Face `datasets` 库。
 
+本项目实现 [Ideas Portal DPI-I-543：将 Hugging Face 数据集导入 IRIS](https://ideas.intersystems.com/ideas/DPI-I-543)，参加 [Community Bounty Program 第三轮](https://community.intersystems.com/post/community-bounty-program-idea-application-%E2%80%94-round-3-live)。
+
 ```objectscript
 write ##class(dc.hfloader.Loader).Load("hitorilabs/iris", "train")
 ```
 
 ## Docker 快速开始
 
-需要 Docker Compose v2、可用的带 Embedded Python 的 IRIS Community 镜像，以及访问 Hugging Face 的网络。Compose 默认使用本地镜像名 `iris-community:2026.3.0AI.154.0`；如果环境中没有该镜像，请通过 `IRIS_IMAGE` 指定可用镜像。
+需要 Docker Compose v2，以及访问 Docker Hub、PyPI 和 Hugging Face 的网络。Compose 默认使用公开镜像 `intersystemsdc/iris-community:latest`；如需其他兼容镜像，可通过 `IRIS_IMAGE` 指定。
 
 ```bash
-IRIS_IMAGE=iris-community:2026.3.0AI.154.0 docker compose up -d --build --wait
+git clone https://github.com/boanerges1227/iris-hf-import.git
+cd iris-hf-import
+docker compose up -d --build --wait
 docker compose exec iris iris session IRIS -U USER
 ```
+
+已在 ARM64 环境验证公开 `latest` 镜像（IRIS Community 2026.1，build 234U）。`latest` 会随时间更新，后续版本的行为可能有所不同。
 
 在 `USER>` 提示符下执行上面的 `Load` 调用。开发容器映射 SQL 端口 21974 和 Web 端口 52998；端口冲突时请修改 `docker-compose.yml`。镜像配置了开发账号 `_SYSTEM` / `SYS`；向其他人开放前请先保护环境。
 

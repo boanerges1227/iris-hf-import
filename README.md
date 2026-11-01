@@ -4,18 +4,24 @@
 
 Import a Hugging Face dataset split into an InterSystems IRIS SQL table with an ObjectScript call. The project uses Embedded Python and the Hugging Face `datasets` library.
 
+This project implements [Ideas Portal DPI-I-543: Load Datasets from Hugging Face into IRIS](https://ideas.intersystems.com/ideas/DPI-I-543) for the [Community Bounty Program — Round 3](https://community.intersystems.com/post/community-bounty-program-idea-application-%E2%80%94-round-3-live).
+
 ```objectscript
 write ##class(dc.hfloader.Loader).Load("hitorilabs/iris", "train")
 ```
 
 ## Docker quick start
 
-Requirements: Docker with Compose v2, access to an IRIS Community image with Embedded Python, and network access to Hugging Face. The Compose default is the locally named image `iris-community:2026.3.0AI.154.0`; set `IRIS_IMAGE` to an image available in your environment if necessary.
+Requirements: Docker with Compose v2 and network access to Docker Hub, PyPI, and Hugging Face. By default, Compose builds from the public `intersystemsdc/iris-community:latest` image. Set `IRIS_IMAGE` to use a different compatible image if needed.
 
 ```bash
-IRIS_IMAGE=iris-community:2026.3.0AI.154.0 docker compose up -d --build --wait
+git clone https://github.com/boanerges1227/iris-hf-import.git
+cd iris-hf-import
+docker compose up -d --build --wait
 docker compose exec iris iris session IRIS -U USER
 ```
+
+The public `latest` image was tested on ARM64 as IRIS Community 2026.1 (build 234U). Because `latest` changes over time, future versions may behave differently.
 
 At the `USER>` prompt, run the `Load` call above. The development container maps SQL port 21974 and web port 52998; edit `docker-compose.yml` if they conflict. The image configures the development credentials `_SYSTEM` / `SYS`; secure your environment before exposing it to others.
 
@@ -58,7 +64,7 @@ On an IRIS instance with Embedded Python and [InterSystems Package Manager](http
 zpm "load /path/to/iris-hf-import"
 ```
 
-The package copies the Python module into IRIS's library Python directory. A public registry package has not been published. The tested environment is IRIS Community 2026.3 ARM64 with Python 3.12; other versions have not been verified. SQL functions, REST endpoints and a web UI are not implemented.
+The package copies the Python module into IRIS's library Python directory. A public registry package has not been published. Local ZPM installation was tested on IRIS Community 2026.3 ARM64 with Python 3.12. SQL functions, REST endpoints and a web UI are not implemented.
 
 ## Tests
 
